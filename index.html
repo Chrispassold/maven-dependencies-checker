@@ -80,6 +80,36 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- Recent Searches -->
+            <div x-show="recentSearches.length > 0" class="mt-4 pt-4 border-t border-gray-200">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-sm font-medium text-gray-700">
+                        <i class="fas fa-history mr-2"></i>Recent Searches
+                    </h4>
+                    <button 
+                        @click="clearRecentSearches()"
+                        class="text-xs text-gray-500 hover:text-red-600 transition-colors duration-200"
+                        title="Clear all recent searches"
+                    >
+                        <i class="fas fa-trash-alt mr-1"></i>Clear All
+                    </button>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <template x-for="(search, index) in recentSearches" :key="index">
+                        <button 
+                            @click="loadRecentSearch(search.url)"
+                            class="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-all duration-200 text-sm font-medium border border-blue-200 hover:border-blue-300 flex items-center gap-2 group"
+                            :title="search.url"
+                        >
+                            <span x-text="search.displayName" class="truncate max-w-48"></span>
+                            <i class="fas fa-times text-blue-500 hover:text-red-600 transition-colors duration-200" 
+                               @click.stop="removeRecentSearch(index)"
+                               title="Remove from recent searches"></i>
+                        </button>
+                    </template>
+                </div>
+            </div>
         </div>
 
         <!-- Disclaimer Section -->
@@ -493,6 +523,7 @@
                     showDown: true,
                     showEqual: true
                 },
+                recentSearches: JSON.parse(localStorage.getItem('recentSearches') || '[]'),
 
                 get activeFilters() {
                     const filters = [];
@@ -614,6 +645,7 @@
 
                         this.jsonOutput = JSON.stringify(sortedDependencies, null, 2);
                         this.results = true;
+                        this.addRecentSearch(this.mavenUrl);
                         this.showNotification('Dependencies extracted successfully!', 'success');
 
                     } catch (error) {
@@ -838,6 +870,43 @@
                         notification.classList.add('translate-x-full');
                         setTimeout(() => notification.remove(), 300);
                     }, 5000);
+                },
+
+                addRecentSearch(url) {
+                    const existingIndex = this.recentSearches.findIndex(search => search.url === url);
+                    if (existingIndex !== -1) {
+                        this.recentSearches.splice(existingIndex, 1);
+                    }
+                    this.recentSearches.unshift({ url, displayName: this.getDisplayName(url) });
+                    if (this.recentSearches.length > 10) {
+                        this.recentSearches.pop();
+                    }
+                    localStorage.setItem('recentSearches', JSON.stringify(this.recentSearches));
+                },
+
+                getDisplayName(url) {
+                    const match = url.match(/https:\/\/mvnrepository\.com\/artifact\/([^/]+)\/([^/]+)\/([^/]+)/);
+                    if (match) {
+                        return `${match[2]}:${match[3]}`;
+                    }
+                    return url;
+                },
+
+                loadRecentSearch(url) {
+                    this.mavenUrl = url;
+                    this.fetchDependencies();
+                    this.addRecentSearch(url);
+                },
+
+                removeRecentSearch(index) {
+                    this.recentSearches.splice(index, 1);
+                    localStorage.setItem('recentSearches', JSON.stringify(this.recentSearches));
+                },
+
+                clearRecentSearches() {
+                    this.recentSearches = [];
+                    localStorage.removeItem('recentSearches');
+                    this.showNotification('All recent searches cleared!', 'info');
                 }
             }
         }

@@ -1,0 +1,659 @@
+---
+alwaysApply: true
+---
+
+# 📝 Padrões de Código - Maven Dependencies Checker
+
+## 🎯 Princípios Gerais
+
+### Responsabilidade Única
+- Cada arquivo deve ter uma responsabilidade específica
+- Componentes devem ser focados em uma funcionalidade
+- Utilitários devem ser reutilizáveis e independentes
+
+### Legibilidade
+- Código deve ser autoexplicativo
+- Use nomes descritivos para variáveis e funções
+- Documente funções complexas com JSDoc
+
+### Consistência
+- Siga os padrões estabelecidos no projeto
+- Use as convenções de nomenclatura definidas
+- Mantenha estrutura consistente entre arquivos
+
+## 📝 Convenções de Nomenclatura
+
+### Arquivos
+- **Componentes**: `camelCase.js` (ex: `search.js`, `comparator.js`)
+- **Utilitários**: `kebab-case.js` (ex: `notification.js`, `version-utils.js`)
+- **Templates**: `component-template.js`, `utility-template.js`
+
+### Variáveis e Funções
+- **Variáveis**: `camelCase` (ex: `mavenUrl`, `loading`, `jsonOutput`)
+- **Funções**: `camelCase` (ex: `fetchDependencies()`, `clearResults()`)
+- **Constantes**: `UPPER_SNAKE_CASE` (ex: `DEFAULT_CONFIG`, `MAX_RETRIES`)
+- **Eventos**: `kebab-case` (ex: `data-processed`, `comparison-completed`)
+
+### Componentes Alpine.js
+- **Nome**: `camelCase + Component` (ex: `searchComponent`, `comparatorComponent`)
+- **Função**: `window.componentName = function()`
+
+### Utilitários
+- **Nome**: `PascalCase + Utils` (ex: `NotificationUtils`, `VersionUtils`)
+- **Objeto**: `window.UtilityName = {}`
+
+## 🏗️ Estrutura de Arquivos
+
+### Componente Alpine.js
+```javascript
+/**
+ * [Nome do Componente] Component
+ * @description [Descrição da responsabilidade]
+ * @author [Seu Nome]
+ * @version 1.0.0
+ */
+
+window.componentName = function() {
+    return {
+        // ========================================
+        // ESTADO (Dados reativos)
+        // ========================================
+        data: '',
+        loading: false,
+        results: null,
+
+        // ========================================
+        // COMPUTED PROPERTIES
+        // ========================================
+        get computedValue() {
+            return this.data ? this.data.toUpperCase() : '';
+        },
+
+        // ========================================
+        // MÉTODOS
+        // ========================================
+        
+        /**
+         * Inicialização do componente
+         */
+        init() {
+            console.log('Component initialized');
+        },
+
+        /**
+         * Processa dados
+         * @param {string} input - Dados de entrada
+         * @returns {boolean} - Sucesso da operação
+         */
+        processData(input) {
+            // Implementação
+            return true;
+        }
+    };
+};
+```
+
+### Utilitário
+```javascript
+/**
+ * [Nome do Utilitário] Utility
+ * @description [Descrição da responsabilidade]
+ * @author [Seu Nome]
+ * @version 1.0.0
+ */
+
+window.UtilityName = {
+    // ========================================
+    // CONSTANTES
+    // ========================================
+    DEFAULT_CONFIG: {
+        timeout: 5000,
+        retries: 3
+    },
+
+    // ========================================
+    // MÉTODOS PRINCIPAIS
+    // ========================================
+    
+    /**
+     * Função principal
+     * @param {string} input - Dados de entrada
+     * @returns {Object} - Resultado processado
+     */
+    processData(input) {
+        // Implementação
+        return result;
+    }
+};
+```
+
+## 📚 Documentação JSDoc
+
+### Funções
+```javascript
+/**
+ * Descrição da função
+ * @param {string} param1 - Descrição do primeiro parâmetro
+ * @param {number} param2 - Descrição do segundo parâmetro
+ * @returns {boolean} - Descrição do retorno
+ * @example
+ * const result = functionName('test', 123);
+ */
+function functionName(param1, param2) {
+    // Implementação
+}
+```
+
+### Componentes
+```javascript
+/**
+ * Componente de exemplo
+ * @description Responsável por processar dados
+ * @example
+ * <div x-data="exampleComponent()">
+ *   <input x-model="data">
+ * </div>
+ */
+window.exampleComponent = function() {
+    return {
+        // Implementação
+    };
+};
+```
+
+### Utilitários
+```javascript
+/**
+ * Utilitário de exemplo
+ * @description Fornece funções de processamento de dados
+ * @example
+ * const result = ExampleUtils.processData('input');
+ */
+window.ExampleUtils = {
+    // Implementação
+};
+```
+
+## 🔄 Comunicação Entre Componentes
+
+### Eventos Customizados
+```javascript
+// Emitir evento
+this.$dispatch('event-name', { 
+    data: 'value',
+    timestamp: new Date().toISOString()
+});
+
+// Escutar evento
+handleEventName(event) {
+    const { data, timestamp } = event.detail;
+    // Processar dados
+}
+```
+
+### Utilitários Compartilhados
+```javascript
+// Sempre use utilitários existentes
+NotificationUtils.success('Operação realizada com sucesso!');
+NotificationUtils.error('Erro na operação');
+NotificationUtils.info('Informação importante');
+
+VersionUtils.compareVersions('1.2.3', '1.2.4');
+VersionUtils.getVersionChangeType('1.2.3', '1.2.4');
+
+StorageUtils.addRecentSearch(url, displayName);
+StorageUtils.getRecentSearches();
+```
+
+## 🐛 Tratamento de Erros
+
+### Try-Catch em Funções Async
+```javascript
+async functionName() {
+    try {
+        // Operação que pode falhar
+        const result = await someAsyncOperation();
+        
+        // Notificação de sucesso
+        NotificationUtils.success('Operação realizada!');
+        
+        return result;
+    } catch (error) {
+        console.error('Erro na operação:', error);
+        NotificationUtils.error('Erro na operação');
+        
+        return null;
+    }
+}
+```
+
+### Validação de Entrada
+```javascript
+function processData(input) {
+    // Validação
+    if (!input || input.trim().length === 0) {
+        NotificationUtils.error('Dados inválidos');
+        return false;
+    }
+
+    // Processamento
+    // ...
+}
+```
+
+## 🎨 Formatação
+
+### Indentação
+- Use 4 espaços para indentação
+- Mantenha consistência em todo o arquivo
+
+### Espaçamento
+```javascript
+// ✅ Bom
+function example(param1, param2) {
+    const result = param1 + param2;
+    return result;
+}
+
+// ❌ Ruim
+function example(param1,param2){
+    const result=param1+param2;
+    return result;
+}
+```
+
+### Quebra de Linha
+```javascript
+// ✅ Bom - Linhas longas quebradas
+const longVariableName = someFunction(
+    parameter1,
+    parameter2,
+    parameter3
+);
+
+// ❌ Ruim - Linha muito longa
+const longVariableName = someFunction(parameter1, parameter2, parameter3);
+```
+
+## 🔧 Boas Práticas
+
+### ✅ Faça
+- Use nomes descritivos para variáveis e funções
+- Documente funções complexas com JSDoc
+- Use utilitários existentes em vez de reimplementar
+- Mantenha funções pequenas e focadas
+- Teste componentes isoladamente
+
+### ❌ Não Faça
+- Não use nomes genéricos como `data`, `result`, `temp`
+- Não duplique código - extraia para utilitários
+- Não crie funções muito longas (> 20 linhas)
+- Não misture responsabilidades em um componente
+- Não ignore tratamento de erros
+
+## 🚀 Performance
+
+### Otimizações
+- Use `get` para computed properties
+- Evite operações pesadas em loops
+- Use debounce para eventos frequentes
+- Limpe event listeners quando necessário
+
+### Exemplo de Debounce
+```javascript
+// Utilitário de debounce
+const debouncedFunction = this.debounce(() => {
+    // Operação que será executada após delay
+}, 300);
+
+// Uso
+input.addEventListener('input', debouncedFunction);
+```
+
+## 🎯 Checklist de Qualidade
+
+### ✅ Antes de Commitar
+- [ ] Código segue padrões de nomenclatura
+- [ ] Funções têm documentação JSDoc
+- [ ] Tratamento de erros implementado
+- [ ] Não há código duplicado
+- [ ] Componentes têm responsabilidade única
+- [ ] Testado localmente
+
+### ✅ Para Novos Recursos
+- [ ] Criado componente específico
+- [ ] Adicionado script no index.html
+- [ ] Implementado comunicação via eventos
+- [ ] Documentado no README
+- [ ] Segue padrões estabelecidos
+
+---
+
+**Mantenha o código limpo, organizado e bem documentado! 📝** # 📝 Padrões de Código - Maven Dependencies Checker
+
+## 🎯 Princípios Gerais
+
+### Responsabilidade Única
+- Cada arquivo deve ter uma responsabilidade específica
+- Componentes devem ser focados em uma funcionalidade
+- Utilitários devem ser reutilizáveis e independentes
+
+### Legibilidade
+- Código deve ser autoexplicativo
+- Use nomes descritivos para variáveis e funções
+- Documente funções complexas com JSDoc
+
+### Consistência
+- Siga os padrões estabelecidos no projeto
+- Use as convenções de nomenclatura definidas
+- Mantenha estrutura consistente entre arquivos
+
+## 📝 Convenções de Nomenclatura
+
+### Arquivos
+- **Componentes**: `camelCase.js` (ex: `search.js`, `comparator.js`)
+- **Utilitários**: `kebab-case.js` (ex: `notification.js`, `version-utils.js`)
+- **Templates**: `component-template.js`, `utility-template.js`
+
+### Variáveis e Funções
+- **Variáveis**: `camelCase` (ex: `mavenUrl`, `loading`, `jsonOutput`)
+- **Funções**: `camelCase` (ex: `fetchDependencies()`, `clearResults()`)
+- **Constantes**: `UPPER_SNAKE_CASE` (ex: `DEFAULT_CONFIG`, `MAX_RETRIES`)
+- **Eventos**: `kebab-case` (ex: `data-processed`, `comparison-completed`)
+
+### Componentes Alpine.js
+- **Nome**: `camelCase + Component` (ex: `searchComponent`, `comparatorComponent`)
+- **Função**: `window.componentName = function()`
+
+### Utilitários
+- **Nome**: `PascalCase + Utils` (ex: `NotificationUtils`, `VersionUtils`)
+- **Objeto**: `window.UtilityName = {}`
+
+## 🏗️ Estrutura de Arquivos
+
+### Componente Alpine.js
+```javascript
+/**
+ * [Nome do Componente] Component
+ * @description [Descrição da responsabilidade]
+ * @author [Seu Nome]
+ * @version 1.0.0
+ */
+
+window.componentName = function() {
+    return {
+        // ========================================
+        // ESTADO (Dados reativos)
+        // ========================================
+        data: '',
+        loading: false,
+        results: null,
+
+        // ========================================
+        // COMPUTED PROPERTIES
+        // ========================================
+        get computedValue() {
+            return this.data ? this.data.toUpperCase() : '';
+        },
+
+        // ========================================
+        // MÉTODOS
+        // ========================================
+        
+        /**
+         * Inicialização do componente
+         */
+        init() {
+            console.log('Component initialized');
+        },
+
+        /**
+         * Processa dados
+         * @param {string} input - Dados de entrada
+         * @returns {boolean} - Sucesso da operação
+         */
+        processData(input) {
+            // Implementação
+            return true;
+        }
+    };
+};
+```
+
+### Utilitário
+```javascript
+/**
+ * [Nome do Utilitário] Utility
+ * @description [Descrição da responsabilidade]
+ * @author [Seu Nome]
+ * @version 1.0.0
+ */
+
+window.UtilityName = {
+    // ========================================
+    // CONSTANTES
+    // ========================================
+    DEFAULT_CONFIG: {
+        timeout: 5000,
+        retries: 3
+    },
+
+    // ========================================
+    // MÉTODOS PRINCIPAIS
+    // ========================================
+    
+    /**
+     * Função principal
+     * @param {string} input - Dados de entrada
+     * @returns {Object} - Resultado processado
+     */
+    processData(input) {
+        // Implementação
+        return result;
+    }
+};
+```
+
+## 📚 Documentação JSDoc
+
+### Funções
+```javascript
+/**
+ * Descrição da função
+ * @param {string} param1 - Descrição do primeiro parâmetro
+ * @param {number} param2 - Descrição do segundo parâmetro
+ * @returns {boolean} - Descrição do retorno
+ * @example
+ * const result = functionName('test', 123);
+ */
+function functionName(param1, param2) {
+    // Implementação
+}
+```
+
+### Componentes
+```javascript
+/**
+ * Componente de exemplo
+ * @description Responsável por processar dados
+ * @example
+ * <div x-data="exampleComponent()">
+ *   <input x-model="data">
+ * </div>
+ */
+window.exampleComponent = function() {
+    return {
+        // Implementação
+    };
+};
+```
+
+### Utilitários
+```javascript
+/**
+ * Utilitário de exemplo
+ * @description Fornece funções de processamento de dados
+ * @example
+ * const result = ExampleUtils.processData('input');
+ */
+window.ExampleUtils = {
+    // Implementação
+};
+```
+
+## 🔄 Comunicação Entre Componentes
+
+### Eventos Customizados
+```javascript
+// Emitir evento
+this.$dispatch('event-name', { 
+    data: 'value',
+    timestamp: new Date().toISOString()
+});
+
+// Escutar evento
+handleEventName(event) {
+    const { data, timestamp } = event.detail;
+    // Processar dados
+}
+```
+
+### Utilitários Compartilhados
+```javascript
+// Sempre use utilitários existentes
+NotificationUtils.success('Operação realizada com sucesso!');
+NotificationUtils.error('Erro na operação');
+NotificationUtils.info('Informação importante');
+
+VersionUtils.compareVersions('1.2.3', '1.2.4');
+VersionUtils.getVersionChangeType('1.2.3', '1.2.4');
+
+StorageUtils.addRecentSearch(url, displayName);
+StorageUtils.getRecentSearches();
+```
+
+## 🐛 Tratamento de Erros
+
+### Try-Catch em Funções Async
+```javascript
+async functionName() {
+    try {
+        // Operação que pode falhar
+        const result = await someAsyncOperation();
+        
+        // Notificação de sucesso
+        NotificationUtils.success('Operação realizada!');
+        
+        return result;
+    } catch (error) {
+        console.error('Erro na operação:', error);
+        NotificationUtils.error('Erro na operação');
+        
+        return null;
+    }
+}
+```
+
+### Validação de Entrada
+```javascript
+function processData(input) {
+    // Validação
+    if (!input || input.trim().length === 0) {
+        NotificationUtils.error('Dados inválidos');
+        return false;
+    }
+
+    // Processamento
+    // ...
+}
+```
+
+## 🎨 Formatação
+
+### Indentação
+- Use 4 espaços para indentação
+- Mantenha consistência em todo o arquivo
+
+### Espaçamento
+```javascript
+// ✅ Bom
+function example(param1, param2) {
+    const result = param1 + param2;
+    return result;
+}
+
+// ❌ Ruim
+function example(param1,param2){
+    const result=param1+param2;
+    return result;
+}
+```
+
+### Quebra de Linha
+```javascript
+// ✅ Bom - Linhas longas quebradas
+const longVariableName = someFunction(
+    parameter1,
+    parameter2,
+    parameter3
+);
+
+// ❌ Ruim - Linha muito longa
+const longVariableName = someFunction(parameter1, parameter2, parameter3);
+```
+
+## 🔧 Boas Práticas
+
+### ✅ Faça
+- Use nomes descritivos para variáveis e funções
+- Documente funções complexas com JSDoc
+- Use utilitários existentes em vez de reimplementar
+- Mantenha funções pequenas e focadas
+- Teste componentes isoladamente
+
+### ❌ Não Faça
+- Não use nomes genéricos como `data`, `result`, `temp`
+- Não duplique código - extraia para utilitários
+- Não crie funções muito longas (> 20 linhas)
+- Não misture responsabilidades em um componente
+- Não ignore tratamento de erros
+
+## 🚀 Performance
+
+### Otimizações
+- Use `get` para computed properties
+- Evite operações pesadas em loops
+- Use debounce para eventos frequentes
+- Limpe event listeners quando necessário
+
+### Exemplo de Debounce
+```javascript
+// Utilitário de debounce
+const debouncedFunction = this.debounce(() => {
+    // Operação que será executada após delay
+}, 300);
+
+// Uso
+input.addEventListener('input', debouncedFunction);
+```
+
+## 🎯 Checklist de Qualidade
+
+### ✅ Antes de Commitar
+- [ ] Código segue padrões de nomenclatura
+- [ ] Funções têm documentação JSDoc
+- [ ] Tratamento de erros implementado
+- [ ] Não há código duplicado
+- [ ] Componentes têm responsabilidade única
+- [ ] Testado localmente
+
+### ✅ Para Novos Recursos
+- [ ] Criado componente específico
+- [ ] Adicionado script no index.html
+- [ ] Implementado comunicação via eventos
+- [ ] Documentado no README
+- [ ] Segue padrões estabelecidos
+
+---
+
+**Mantenha o código limpo, organizado e bem documentado! 📝** 

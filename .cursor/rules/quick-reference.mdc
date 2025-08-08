@@ -1,0 +1,513 @@
+---
+description: any time you need to have a quick understood of the project
+alwaysApply: false
+---
+# 📚 Referência Rápida - Maven Dependencies Checker
+
+## 🎯 Estrutura Rápida
+
+### Arquivos Principais
+```
+index.html                    # Arquivo principal
+js/utils/notification.js      # Sistema de notificações
+js/utils/version-utils.js     # Comparação de versões
+js/utils/storage.js          # Gerenciamento localStorage
+js/components/search.js       # Busca de dependências
+js/components/comparator.js   # Comparação de JSONs
+js/components/filter.js       # Gerenciamento de filtros
+js/app.js                    # Componente principal
+```
+
+### Templates
+```
+templates/component-template.js  # Template para componentes
+templates/utility-template.js    # Template para utilitários
+```
+
+## 🚀 Comandos Rápidos
+
+### Criar Novo Componente
+```bash
+# 1. Copiar template
+cp templates/component-template.js js/components/new-component.js
+
+# 2. Editar arquivo
+# 3. Adicionar script no index.html
+# 4. Usar no HTML com x-data="newComponent()"
+```
+
+### Criar Novo Utilitário
+```bash
+# 1. Copiar template
+cp templates/utility-template.js js/utils/new-utility.js
+
+# 2. Editar arquivo
+# 3. Adicionar script no index.html
+# 4. Usar em componentes
+```
+
+## 📝 Padrões de Código
+
+### Componente Alpine.js
+```javascript
+window.componentName = function() {
+    return {
+        // Estado
+        data: '',
+        loading: false,
+        
+        // Computed
+        get computedValue() {
+            return this.data.toUpperCase();
+        },
+        
+        // Métodos
+        init() {
+            console.log('Component initialized');
+        },
+        
+        handleAction() {
+            NotificationUtils.success('Action completed!');
+        }
+    };
+};
+```
+
+### Utilitário
+```javascript
+window.UtilityName = {
+    /**
+     * Descrição da função
+     * @param {string} param - Descrição
+     * @returns {string} - Descrição
+     */
+    functionName(param) {
+        return result;
+    }
+};
+```
+
+### Eventos Customizados
+```javascript
+// Emitir
+this.$dispatch('event-name', { data: 'value' });
+
+// Escutar
+handleEventName(event) {
+    const { data } = event.detail;
+}
+```
+
+## 🔧 Utilitários Disponíveis
+
+### NotificationUtils
+```javascript
+NotificationUtils.success('Sucesso!');
+NotificationUtils.error('Erro!');
+NotificationUtils.info('Informação!');
+NotificationUtils.show('Mensagem', 'tipo');
+```
+
+### VersionUtils
+```javascript
+VersionUtils.compareVersions('1.2.3', '1.2.4');
+VersionUtils.getVersionChangeType('1.2.3', '1.2.4');
+VersionUtils.getVersionBadgeClass('1.2.3', '1.2.4');
+VersionUtils.getVersionIcon('1.2.3', '1.2.4');
+```
+
+### StorageUtils
+```javascript
+StorageUtils.getRecentSearches();
+StorageUtils.addRecentSearch(url, displayName);
+StorageUtils.removeRecentSearch(index);
+StorageUtils.clearRecentSearches();
+StorageUtils.getDisplayName(url);
+```
+
+## 🐛 Debugging Rápido
+
+### Logs por Componente
+```javascript
+// Search
+console.log('[Search] URL:', this.mavenUrl);
+console.log('[Search] Loading:', this.loading);
+
+// Comparator
+console.log('[Comparator] JSON Old:', this.jsonOld);
+console.log('[Comparator] JSON New:', this.jsonNew);
+
+// Filter
+console.log('[Filter] Filters:', this.filters);
+console.log('[Filter] Results:', this.filteredResults);
+```
+
+### Teste de Utilitários
+```javascript
+// Console do navegador
+NotificationUtils.success('Test');
+VersionUtils.compareVersions('1.2.3', '1.2.4');
+StorageUtils.getRecentSearches();
+```
+
+### Acesso a Componentes
+```javascript
+// Console do navegador
+document.querySelector('[x-data*="searchComponent"]').__x.$data
+document.querySelector('[x-data*="comparatorComponent"]').__x.$data
+```
+
+## 📋 Checklist Rápido
+
+### Antes de Commitar
+- [ ] Código segue padrões de nomenclatura
+- [ ] Usa utilitários existentes
+- [ ] Documentação JSDoc atualizada
+- [ ] Testado localmente
+- [ ] Compatível com GitHub Pages
+
+### Para Novos Recursos
+- [ ] Criado componente específico
+- [ ] Adicionado script no index.html
+- [ ] Usado x-data no HTML
+- [ ] Implementado comunicação via eventos
+
+## 🎯 Mapeamento de Problemas
+
+| Problema | Componente | Arquivo |
+|----------|------------|---------|
+| Busca falha | searchComponent | `js/components/search.js` |
+| Comparação falha | comparatorComponent | `js/components/comparator.js` |
+| Filtros não funcionam | filterComponent | `js/components/filter.js` |
+| Notificações não aparecem | NotificationUtils | `js/utils/notification.js` |
+| Dados não salvam | StorageUtils | `js/utils/storage.js` |
+| Versões comparam errado | VersionUtils | `js/utils/version-utils.js` |
+
+## 🔄 Convenções de Commit
+
+### Formato
+```bash
+git commit -m "tipo(escopo): descrição"
+```
+
+### Tipos
+- `feat`: Nova funcionalidade
+- `fix`: Correção de bug
+- `docs`: Documentação
+- `refactor`: Refatoração
+- `test`: Testes
+
+### Exemplos
+```bash
+git commit -m "feat(search): add retry logic"
+git commit -m "fix(comparator): handle invalid JSON"
+git commit -m "refactor(utils): extract version logic"
+```
+
+## 🚀 Deploy
+
+### GitHub Pages
+```bash
+git push origin main
+# Site atualizado automaticamente
+```
+
+### Verificação
+- [ ] Site carrega
+- [ ] Funcionalidades funcionam
+- [ ] Sem erros no console
+
+## 📚 Documentação
+
+### Arquivos de Documentação
+- `ARCHITECTURE.md` - Arquitetura do projeto
+- `EXAMPLE_USAGE.md` - Exemplos de uso
+- `REFACTORING_SUMMARY.md` - Resumo da refatoração
+- `.cursor/rules/` - Regras do Cursor
+
+### JSDoc
+```javascript
+/**
+ * Descrição da função
+ * @param {string} param1 - Descrição
+ * @param {number} param2 - Descrição
+ * @returns {boolean} - Descrição
+ * @example
+ * const result = functionName('test', 123);
+ */
+```
+
+## 🎨 Nomenclatura
+
+### Arquivos
+- Componentes: `camelCase.js`
+- Utilitários: `kebab-case.js`
+
+### Variáveis e Funções
+- Variáveis: `camelCase`
+- Funções: `camelCase`
+- Constantes: `UPPER_SNAKE_CASE`
+- Eventos: `kebab-case`
+
+### Componentes e Utilitários
+- Componentes: `camelCase + Component`
+- Utilitários: `PascalCase + Utils`
+
+---
+
+**Use esta referência para desenvolvimento rápido e eficiente! 📚** # 📚 Referência Rápida - Maven Dependencies Checker
+
+## 🎯 Estrutura Rápida
+
+### Arquivos Principais
+```
+index.html                    # Arquivo principal
+js/utils/notification.js      # Sistema de notificações
+js/utils/version-utils.js     # Comparação de versões
+js/utils/storage.js          # Gerenciamento localStorage
+js/components/search.js       # Busca de dependências
+js/components/comparator.js   # Comparação de JSONs
+js/components/filter.js       # Gerenciamento de filtros
+js/app.js                    # Componente principal
+```
+
+### Templates
+```
+templates/component-template.js  # Template para componentes
+templates/utility-template.js    # Template para utilitários
+```
+
+## 🚀 Comandos Rápidos
+
+### Criar Novo Componente
+```bash
+# 1. Copiar template
+cp templates/component-template.js js/components/new-component.js
+
+# 2. Editar arquivo
+# 3. Adicionar script no index.html
+# 4. Usar no HTML com x-data="newComponent()"
+```
+
+### Criar Novo Utilitário
+```bash
+# 1. Copiar template
+cp templates/utility-template.js js/utils/new-utility.js
+
+# 2. Editar arquivo
+# 3. Adicionar script no index.html
+# 4. Usar em componentes
+```
+
+## 📝 Padrões de Código
+
+### Componente Alpine.js
+```javascript
+window.componentName = function() {
+    return {
+        // Estado
+        data: '',
+        loading: false,
+        
+        // Computed
+        get computedValue() {
+            return this.data.toUpperCase();
+        },
+        
+        // Métodos
+        init() {
+            console.log('Component initialized');
+        },
+        
+        handleAction() {
+            NotificationUtils.success('Action completed!');
+        }
+    };
+};
+```
+
+### Utilitário
+```javascript
+window.UtilityName = {
+    /**
+     * Descrição da função
+     * @param {string} param - Descrição
+     * @returns {string} - Descrição
+     */
+    functionName(param) {
+        return result;
+    }
+};
+```
+
+### Eventos Customizados
+```javascript
+// Emitir
+this.$dispatch('event-name', { data: 'value' });
+
+// Escutar
+handleEventName(event) {
+    const { data } = event.detail;
+}
+```
+
+## 🔧 Utilitários Disponíveis
+
+### NotificationUtils
+```javascript
+NotificationUtils.success('Sucesso!');
+NotificationUtils.error('Erro!');
+NotificationUtils.info('Informação!');
+NotificationUtils.show('Mensagem', 'tipo');
+```
+
+### VersionUtils
+```javascript
+VersionUtils.compareVersions('1.2.3', '1.2.4');
+VersionUtils.getVersionChangeType('1.2.3', '1.2.4');
+VersionUtils.getVersionBadgeClass('1.2.3', '1.2.4');
+VersionUtils.getVersionIcon('1.2.3', '1.2.4');
+```
+
+### StorageUtils
+```javascript
+StorageUtils.getRecentSearches();
+StorageUtils.addRecentSearch(url, displayName);
+StorageUtils.removeRecentSearch(index);
+StorageUtils.clearRecentSearches();
+StorageUtils.getDisplayName(url);
+```
+
+## 🐛 Debugging Rápido
+
+### Logs por Componente
+```javascript
+// Search
+console.log('[Search] URL:', this.mavenUrl);
+console.log('[Search] Loading:', this.loading);
+
+// Comparator
+console.log('[Comparator] JSON Old:', this.jsonOld);
+console.log('[Comparator] JSON New:', this.jsonNew);
+
+// Filter
+console.log('[Filter] Filters:', this.filters);
+console.log('[Filter] Results:', this.filteredResults);
+```
+
+### Teste de Utilitários
+```javascript
+// Console do navegador
+NotificationUtils.success('Test');
+VersionUtils.compareVersions('1.2.3', '1.2.4');
+StorageUtils.getRecentSearches();
+```
+
+### Acesso a Componentes
+```javascript
+// Console do navegador
+document.querySelector('[x-data*="searchComponent"]').__x.$data
+document.querySelector('[x-data*="comparatorComponent"]').__x.$data
+```
+
+## 📋 Checklist Rápido
+
+### Antes de Commitar
+- [ ] Código segue padrões de nomenclatura
+- [ ] Usa utilitários existentes
+- [ ] Documentação JSDoc atualizada
+- [ ] Testado localmente
+- [ ] Compatível com GitHub Pages
+
+### Para Novos Recursos
+- [ ] Criado componente específico
+- [ ] Adicionado script no index.html
+- [ ] Usado x-data no HTML
+- [ ] Implementado comunicação via eventos
+
+## 🎯 Mapeamento de Problemas
+
+| Problema | Componente | Arquivo |
+|----------|------------|---------|
+| Busca falha | searchComponent | `js/components/search.js` |
+| Comparação falha | comparatorComponent | `js/components/comparator.js` |
+| Filtros não funcionam | filterComponent | `js/components/filter.js` |
+| Notificações não aparecem | NotificationUtils | `js/utils/notification.js` |
+| Dados não salvam | StorageUtils | `js/utils/storage.js` |
+| Versões comparam errado | VersionUtils | `js/utils/version-utils.js` |
+
+## 🔄 Convenções de Commit
+
+### Formato
+```bash
+git commit -m "tipo(escopo): descrição"
+```
+
+### Tipos
+- `feat`: Nova funcionalidade
+- `fix`: Correção de bug
+- `docs`: Documentação
+- `refactor`: Refatoração
+- `test`: Testes
+
+### Exemplos
+```bash
+git commit -m "feat(search): add retry logic"
+git commit -m "fix(comparator): handle invalid JSON"
+git commit -m "refactor(utils): extract version logic"
+```
+
+## 🚀 Deploy
+
+### GitHub Pages
+```bash
+git push origin main
+# Site atualizado automaticamente
+```
+
+### Verificação
+- [ ] Site carrega
+- [ ] Funcionalidades funcionam
+- [ ] Sem erros no console
+
+## 📚 Documentação
+
+### Arquivos de Documentação
+- `ARCHITECTURE.md` - Arquitetura do projeto
+- `EXAMPLE_USAGE.md` - Exemplos de uso
+- `REFACTORING_SUMMARY.md` - Resumo da refatoração
+- `.cursor/rules/` - Regras do Cursor
+
+### JSDoc
+```javascript
+/**
+ * Descrição da função
+ * @param {string} param1 - Descrição
+ * @param {number} param2 - Descrição
+ * @returns {boolean} - Descrição
+ * @example
+ * const result = functionName('test', 123);
+ */
+```
+
+## 🎨 Nomenclatura
+
+### Arquivos
+- Componentes: `camelCase.js`
+- Utilitários: `kebab-case.js`
+
+### Variáveis e Funções
+- Variáveis: `camelCase`
+- Funções: `camelCase`
+- Constantes: `UPPER_SNAKE_CASE`
+- Eventos: `kebab-case`
+
+### Componentes e Utilitários
+- Componentes: `camelCase + Component`
+- Utilitários: `PascalCase + Utils`
+
+---
+
+**Use esta referência para desenvolvimento rápido e eficiente! 📚** 
+
+Quando utilizar esse arquivo, mostre no chat "Consultando as referencias"

@@ -9,10 +9,36 @@ window.comparatorComponent = function() {
         jsonNew: '',
         depsOld: {},
         depsNew: {},
+        oldLibraryInfo: { displayName: 'Old JSON (Version 1)' },
+        newLibraryInfo: { displayName: 'New JSON (Version 2)' },
 
         init() {
             // Initialize comparator
-            console.log('Comparator component initialized');
+            
+            // Register this component in the bridge
+            if (window.ComponentBridge) {
+                window.ComponentBridge.register('comparator', this);
+            }
+            
+            // Listen for copy-to-field events from the app
+            window.addEventListener('app-copy-to-field', (event) => {
+                const { field, jsonOutput, versionName } = event.detail;
+                
+                if (field === 'old') {
+                    this.jsonOld = jsonOutput;
+                    if (versionName) {
+                        this.oldLibraryInfo = { displayName: versionName };
+                    }
+                } else if (field === 'new') {
+                    this.jsonNew = jsonOutput;
+                    if (versionName) {
+                        this.newLibraryInfo = { displayName: versionName };
+                    }
+                }
+            });
+
+            // Note: Library info is now set when copying from search results
+            // If JSON is manually pasted, we keep the default titles
         },
 
         compareJsons() {
@@ -59,13 +85,15 @@ window.comparatorComponent = function() {
             }
 
             // Dispatch event with comparison results
-            this.$dispatch('comparison-completed', { 
+            const comparisonData = { 
                 added, 
                 removed, 
                 changed,
                 depsOld: this.depsOld,
                 depsNew: this.depsNew
-            });
+            };
+            
+            this.$dispatch('comparison-completed', comparisonData);
             
             const totalChanges = added.length + removed.length + changed.length;
             NotificationUtils.success(`Comparison completed: ${totalChanges} changes found.`);

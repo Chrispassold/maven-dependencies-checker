@@ -13,6 +13,37 @@ window.comparisonResultsComponent = function() {
         },
         depsOld: {},
         depsNew: {},
+        filters: {
+            showAdded: true,
+            showChanged: true,
+            showRemoved: true,
+            showOnlyExisting: false,
+            showUp: true,
+            showDown: true,
+            showEqual: true
+        },
+
+        init() {
+            // Listen for comparison results updates via events
+            this.$el.addEventListener('comparison-completed', (event) => {
+                const { added, removed, changed, depsOld, depsNew } = event.detail;
+                
+                this.results = { 
+                    added: added || [], 
+                    removed: removed || [], 
+                    changed: changed || [] 
+                };
+                this.depsOld = depsOld || {};
+                this.depsNew = depsNew || {};
+                this.comparisonResults = true;
+            });
+            
+            // Listen for filter updates via events
+            this.$el.addEventListener('filters-updated', (event) => {
+                const filters = event.detail;
+                this.filters = { ...filters };
+            });
+        },
 
         get activeFilters() {
             const filters = [];
@@ -27,9 +58,9 @@ window.comparisonResultsComponent = function() {
         },
 
         get filteredResults() {
-            let added = this.results.added;
-            let removed = this.results.removed;
-            let changed = this.results.changed;
+            let added = this.results.added || [];
+            let removed = this.results.removed || [];
+            let changed = this.results.changed || [];
 
             if (this.filters.showOnlyExisting) {
                 added = added.filter(item => this.depsOld.hasOwnProperty(item.key));

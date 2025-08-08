@@ -16,7 +16,21 @@ window.filterComponent = function() {
         },
 
         init() {
-            console.log('Filter component initialized');
+            // Share filters with other components via events
+            this.$watch('filters', (value) => {
+                this.$dispatch('filters-updated', value);
+                
+                // Also dispatch to comparison results component
+                setTimeout(() => {
+                    const comparisonComponent = document.querySelector('[x-data*="comparisonResultsComponent"]');
+                    if (comparisonComponent) {
+                        const customEvent = new CustomEvent('filters-updated', {
+                            detail: value
+                        });
+                        comparisonComponent.dispatchEvent(customEvent);
+                    }
+                }, 50);
+            }, { deep: true });
         },
 
         selectAllFilters() {

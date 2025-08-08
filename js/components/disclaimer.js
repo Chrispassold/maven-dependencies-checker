@@ -7,7 +7,6 @@ window.disclaimerComponent = function() {
     return {
         init() {
             // Disclaimer initialization logic if needed
-            console.log('Disclaimer component initialized');
         }
     };
 }; 

@@ -9,6 +9,7 @@ window.searchComponent = function() {
         loading: false,
         results: null,
         jsonOutput: '',
+        versionName: '',
         recentSearches: [],
 
         init() {
@@ -42,6 +43,15 @@ window.searchComponent = function() {
 
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlContent, 'text/html');
+
+                // Extract library name and version from URL
+                const urlParts = this.mavenUrl.split('/');
+                const version = urlParts[urlParts.length - 1] || '';
+                const artifact = urlParts[urlParts.length - 2] || '';
+                const group = urlParts[urlParts.length - 3] || '';
+                
+                // Create library identifier
+                this.versionName = `${group}:${artifact}:${version}`;
 
                 const libraryIdentifier = [...doc.querySelectorAll('.breadcrumb a')]
                     .slice(-2)
@@ -90,6 +100,37 @@ window.searchComponent = function() {
                 // Add to recent searches
                 const displayName = StorageUtils.getDisplayName(this.mavenUrl);
                 this.recentSearches = StorageUtils.addRecentSearch(this.mavenUrl, displayName);
+                
+                // Dispatch event to results component
+                setTimeout(() => {
+                    // Try multiple selectors to find the results component
+                    const selectors = [
+                        '[x-data*="resultsComponent"]',
+                        '[x-data*="resultsComponent()"]',
+                        '.bg-white.rounded-xl.shadow-lg.p-6.mb-8'
+                    ];
+                    
+                    let resultsComponent = null;
+                    for (const selector of selectors) {
+                        resultsComponent = document.querySelector(selector);
+                        if (resultsComponent) {
+                            break;
+                        }
+                    }
+                    
+                    if (resultsComponent) {
+                        const customEvent = new CustomEvent('search-completed', {
+                            detail: { jsonOutput: this.jsonOutput, versionName: this.versionName }
+                        });
+                        resultsComponent.dispatchEvent(customEvent);
+                    }
+                    
+                    // Also dispatch to window as fallback
+                    const windowEvent = new CustomEvent('search-completed', {
+                        detail: { jsonOutput: this.jsonOutput, versionName: this.versionName }
+                    });
+                    window.dispatchEvent(windowEvent);
+                }, 100);
                 
                 NotificationUtils.success('Dependencies extracted successfully!');
 

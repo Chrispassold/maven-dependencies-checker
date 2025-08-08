@@ -1,0 +1,308 @@
+# 🐛 Debugging e Troubleshooting - Maven Dependencies Checker
+
+## 🎯 Identificação de Problemas
+
+### Mapeamento de Problemas para Componentes
+
+| Problema | Componente Responsável | Arquivo |
+|----------|----------------------|---------|
+| Busca não funciona | `searchComponent` | `js/components/search.js` |
+| Comparação falha | `comparatorComponent` | `js/components/comparator.js` |
+| Filtros não aplicam | `filterComponent` | `js/components/filter.js` |
+| Notificações não aparecem | `NotificationUtils` | `js/utils/notification.js` |
+| Pesquisas recentes não salvam | `StorageUtils` | `js/utils/storage.js` |
+| Comparação de versões incorreta | `VersionUtils` | `js/utils/version-utils.js` |
+| Interface não responde | `app.js` | `js/app.js` |
+
+### Console Logs por Componente
+
+```javascript
+// searchComponent
+console.log('[Search] URL:', this.mavenUrl);
+console.log('[Search] Loading:', this.loading);
+console.log('[Search] Results:', this.results);
+
+// comparatorComponent
+console.log('[Comparator] JSON Old:', this.jsonOld);
+console.log('[Comparator] JSON New:', this.jsonNew);
+console.log('[Comparator] Dependencies Old:', this.depsOld);
+
+// filterComponent
+console.log('[Filter] Active filters:', this.filters);
+console.log('[Filter] Filtered results:', this.filteredResults);
+```
+
+## 🔍 Debugging de Eventos
+
+### Eventos Customizados
+```javascript
+// Adicione logs para debug de eventos
+this.$dispatch('debug-event', { 
+    component: 'searchComponent',
+    action: 'fetchDependencies',
+    data: { url: this.mavenUrl }
+});
+
+// No app.js - Escutar todos os eventos
+handleDebugEvent(event) {
+    console.log('🔍 Debug Event:', event.detail);
+}
+```
+
+### Monitoramento de Eventos
+```javascript
+// Adicione este código temporariamente no app.js
+document.addEventListener('alpine:init', () => {
+    // Monitorar todos os eventos Alpine
+    document.addEventListener('alpine:initialized', (event) => {
+        console.log('🔄 Alpine initialized:', event.target);
+    });
+});
+```
+
+## 🐛 Problemas Comuns
+
+### 1. Busca de Dependências Falha
+
+**Sintomas:**
+- Loading infinito
+- Erro "Could not get HTML content"
+- JSON vazio
+
+**Debugging:**
+```javascript
+// Adicione logs no searchComponent
+async fetchDependencies() {
+    console.log('🔍 [Search] Iniciando busca:', this.mavenUrl);
+    
+    try {
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(this.mavenUrl)}`;
+        console.log('🔍 [Search] Proxy URL:', proxyUrl);
+        
+        const response = await fetch(proxyUrl);
+        console.log('🔍 [Search] Response status:', response.status);
+        
+        const data = await response.json();
+        console.log('🔍 [Search] Response data:', data);
+        
+        // ... resto do código
+    } catch (error) {
+        console.error('❌ [Search] Erro:', error);
+    }
+}
+```
+
+**Soluções:**
+1. Verificar se a URL é válida
+2. Testar proxy alternativo
+3. Verificar CORS
+4. Implementar retry logic
+
+### 2. Comparação de JSONs Falha
+
+**Sintomas:**
+- Erro "JSON must be a dependencies object"
+- Comparação não funciona
+- Resultados vazios
+
+**Debugging:**
+```javascript
+// Adicione logs no comparatorComponent
+compareJsons() {
+    console.log('🔍 [Comparator] JSON Old:', this.jsonOld);
+    console.log('🔍 [Comparator] JSON New:', this.jsonNew);
+    
+    try {
+        this.depsOld = JSON.parse(this.jsonOld);
+        console.log('🔍 [Comparator] Parsed Old:', this.depsOld);
+        
+        this.depsNew = JSON.parse(this.jsonNew);
+        console.log('🔍 [Comparator] Parsed New:', this.depsNew);
+        
+        // ... resto do código
+    } catch (e) {
+        console.error('❌ [Comparator] Parse error:', e);
+    }
+}
+```
+
+**Soluções:**
+1. Validar formato JSON
+2. Verificar estrutura de dependências
+3. Implementar validação mais robusta
+
+### 3. Filtros Não Aplicam
+
+**Sintomas:**
+- Filtros não funcionam
+- Resultados não mudam
+- Interface não responde
+
+**Debugging:**
+```javascript
+// Adicione logs no filterComponent
+get filteredResults() {
+    console.log('🔍 [Filter] Current filters:', this.filters);
+    console.log('🔍 [Filter] Raw results:', this.results);
+    
+    // ... lógica de filtro
+    
+    console.log('🔍 [Filter] Filtered results:', filteredResults);
+    return filteredResults;
+}
+```
+
+**Soluções:**
+1. Verificar reatividade Alpine.js
+2. Validar computed properties
+3. Verificar binding de dados
+
+### 4. Notificações Não Aparecem
+
+**Sintomas:**
+- Notificações não aparecem
+- Erro no console
+- UI não atualiza
+
+**Debugging:**
+```javascript
+// Teste NotificationUtils diretamente
+NotificationUtils.show('Test notification', 'info');
+NotificationUtils.success('Test success');
+NotificationUtils.error('Test error');
+```
+
+**Soluções:**
+1. Verificar se script foi carregado
+2. Verificar ordem de carregamento
+3. Testar em console do navegador
+
+## 🔧 Ferramentas de Debug
+
+### 1. Console do Navegador
+```javascript
+// Acesse componentes via console
+// No console do navegador:
+Alpine.store('debug', {
+    searchComponent: document.querySelector('[x-data*="searchComponent"]').__x.$data,
+    comparatorComponent: document.querySelector('[x-data*="comparatorComponent"]').__x.$data,
+    filterComponent: document.querySelector('[x-data*="filterComponent"]').__x.$data
+});
+
+// Acesse via:
+Alpine.store('debug').searchComponent.mavenUrl
+```
+
+### 2. Network Tab
+- Verificar requisições para proxy
+- Verificar status das respostas
+- Verificar payload das requisições
+
+### 3. Application Tab
+- Verificar localStorage
+- Verificar sessionStorage
+- Verificar cookies
+
+## 🛠️ Debugging Avançado
+
+### 1. Performance Debugging
+```javascript
+// Adicione performance marks
+console.time('fetchDependencies');
+await this.fetchDependencies();
+console.timeEnd('fetchDependencies');
+
+// Memory usage
+console.log('Memory usage:', performance.memory);
+```
+
+### 2. State Debugging
+```javascript
+// Debug state changes
+this.$watch('mavenUrl', (value) => {
+    console.log('🔄 [Search] URL changed:', value);
+});
+
+this.$watch('loading', (value) => {
+    console.log('🔄 [Search] Loading changed:', value);
+});
+```
+
+### 3. Event Debugging
+```javascript
+// Debug all events
+document.addEventListener('alpine:init', () => {
+    Alpine.data('debugEvents', () => ({
+        init() {
+            this.$watch('$data', (value) => {
+                console.log('🔄 [Debug] State changed:', value);
+            });
+        }
+    }));
+});
+```
+
+## 🚨 Troubleshooting Rápido
+
+### Checklist de Debugging
+- [ ] Console aberto (F12)
+- [ ] Network tab ativo
+- [ ] Application tab verificado
+- [ ] Componente responsável identificado
+- [ ] Logs adicionados
+- [ ] Erro reproduzível
+
+### Comandos Úteis
+```javascript
+// Testar utilitários
+NotificationUtils.success('Test');
+VersionUtils.compareVersions('1.2.3', '1.2.4');
+StorageUtils.getRecentSearches();
+
+// Verificar Alpine.js
+console.log('Alpine version:', Alpine.version);
+
+// Verificar componentes
+document.querySelectorAll('[x-data]').forEach(el => {
+    console.log('Component:', el.__x.$data);
+});
+```
+
+## 📊 Monitoramento
+
+### Métricas Importantes
+- Tempo de resposta da busca
+- Taxa de sucesso das requisições
+- Uso de memória
+- Performance da comparação
+
+### Logs Estruturados
+```javascript
+// Log estruturado para análise
+console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    component: 'searchComponent',
+    action: 'fetchDependencies',
+    url: this.mavenUrl,
+    success: true,
+    duration: performance.now() - startTime
+}));
+```
+
+## 🎯 Resolução de Problemas
+
+### 1. Problema: Busca Lenta
+**Solução:** Implementar cache e retry logic
+
+### 2. Problema: Comparação Incorreta
+**Solução:** Melhorar algoritmo de comparação de versões
+
+### 3. Problema: Interface Travada
+**Solução:** Verificar loops infinitos e memory leaks
+
+### 4. Problema: Dados Não Salvam
+**Solução:** Verificar localStorage e implementar fallback
+
+---
+
+**Use estas ferramentas para identificar e resolver problemas rapidamente! 🐛** 
